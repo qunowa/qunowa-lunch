@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>qunowa - メニュー一覧</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+        </div>
+        <div class="header-center">
+            <h1>qunowa</h1>
+        </div>
+        <div class="header-right">
+            <span id="current-date"></span>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="grid-container" id="menu-grid-container">
+            <!-- メニューアイテムはJavaScriptで動的に生成されます -->
+        </div>
+    </main>
+
+    <!-- モーダルウィンドウのHTML構造 -->
+    <div id="menu-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <img id="modal-main-image" src="" alt="メニュー画像" class="modal-main-image">
+            <div class="modal-text-content">
+                <h2 id="modal-menu-name"></h2>
+                <p id="modal-menu-price" class="price"></p>
+                <p id="modal-menu-description" class="description"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateElement = document.getElementById('current-date');
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth() + 1;
+            const day = today.getDate();
+            dateElement.textContent = `${year}/${month}/${day}`;
+
+            // メニューデータ
+            const menuItems = [
+                {
+                    id: 1,
+                    name: "特製ハンバーグランチ",
+                    price: "¥1,200",
+                    description: "厳選した国産豚と牛肉を黄金比でブレンドした、肉汁あふれるジューシーなハンバーグです。特製デミグラスソースが、ご飯との相性抜群。彩り豊かな新鮮野菜と共にお召し上がりください。",
+                    image: "/Users/kojimatomoyuki/qunowa-lunch/images/ido/butakakuniのコピー.JPG"
+                },
+                {
+                    id: 2,
+                    name: "彩り野菜のパスタ",
+                    price: "¥1,100",
+                    description: "旬の野菜をふんだんに使用した、彩り豊かなパスタです。特製のソースが野菜の甘みを引き立て、ヘルシーながらも満足感のある一皿に仕上げました。",
+                    image: "/Users/kojimatomoyuki/qunowa-lunch/images/ido/kadoのコピー.jpg"
+                },
+                {
+                    id: 3,
+                    name: "チキン南蛮定食",
+                    price: "¥1,050",
+                    description: "特製の甘酢とタルタルソースが絶妙に絡み合う、ジューシーなチキン南蛮です。ご飯が進むこと間違いなしの、ボリューム満点定食。",
+                    image: "/Users/kojimatomoyuki/qunowa-lunch/images/ido/kaisenndonのコピー.JPG"
+                },
+                {
+                    id: 4,
+                    name: "海鮮丼",
+                    price: "¥1,500",
+                    description: "新鮮な海の幸を贅沢に盛り付けた海鮮丼。その日の仕入れによって内容が変わる、旬の味覚をお楽しみください。",
+                    image: "/Users/kojimatomoyuki/qunowa-lunch/images/ido/magurokarubiのコピー.JPG"
+                },
+                {
+                    id: 5,
+                    name: "ローストビーフ丼",
+                    price: "¥1,350",
+                    description: "低温でじっくりと火を通した柔らかなローストビーフを、特製ソースと共にご飯の上に。贅沢な味わいをご堪能ください。",
+                    image: "/Users/kojimatomoyuki/qunowa-lunch/images/ido/saikyouyakiのコピー.JPG"
+                },
+                {
+                    id: 6,
+                    name: "本日の日替わりランチ",
+                    price: "¥980",
+                    description: "毎日変わるシェフのおすすめランチ。旬の食材を活かした、ここでしか味わえない一皿です。内容はスタッフまでお尋ねください。",
+                    image: "/Users/kojimatomoyuki/qunowa-lunch/images/ido/tikinnanbanのコピー.JPG"
+                },
+                {
+                    id: 7,
+                    name: "刺身定食",
+                    price: "¥1,400",
+                    description: "新鮮な海の幸を贅沢に盛り合わせた、料理長自慢の刺身定食です。旬の魚介を日替わりでご提供。ぷりぷりの食感と、とろける旨味をご堪能ください。",
+                    image: "/Users/kojimatomoyuki/qunowa-lunch/images/ido/sasimiteishokuのコピー.JPG"
+                }
+            ];
+
+            const menuGridContainer = document.getElementById('menu-grid-container');
+
+            // メニューアイテムを動的に生成
+            function renderMenuItems() {
+                menuGridContainer.innerHTML = ''; // 既存のアイテムをクリア
+                menuItems.forEach(item => {
+                    const gridItem = document.createElement('a');
+                    gridItem.classList.add('grid-item', 'open-modal');
+                    gridItem.dataset.id = item.id;
+                    gridItem.dataset.name = item.name;
+                    gridItem.dataset.price = item.price;
+                    gridItem.dataset.description = item.description;
+                    gridItem.dataset.image = item.image;
+
+                    gridItem.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" loading="lazy">
+                        <div class="grid-item-text">
+                            <h3>${item.name}</h3>
+                            <p>${item.price}</p>
+                        </div>
+                    `;
+                    menuGridContainer.appendChild(gridItem);
+                });
+                attachModalEventListeners(); // イベントリスナーを再設定
+            }
+
+            // モーダル関連の要素
+            const modal = document.getElementById('menu-modal');
+            const closeButton = document.querySelector('.close-button');
+            const modalMainImage = document.getElementById('modal-main-image');
+            const modalMenuName = document.getElementById('modal-menu-name');
+            const modalMenuPrice = document.getElementById('modal-menu-price');
+            const modalMenuDescription = document.getElementById('modal-menu-description');
+
+            // モーダルイベントリスナーをアタッチする関数
+            function attachModalEventListeners() {
+                const gridItems = document.querySelectorAll('.grid-item.open-modal');
+                gridItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault(); // リンクのデフォルト動作をキャンセル
+
+                        const id = item.dataset.id;
+                        const name = item.dataset.name;
+                        const price = item.dataset.price;
+                        const description = item.dataset.description;
+                        const image = item.dataset.image;
+
+                        modalMainImage.src = image;
+                        modalMenuName.textContent = name;
+                        modalMenuPrice.textContent = price;
+                        modalMenuDescription.textContent = description;
+
+                        modal.style.display = 'flex'; // flexに変更して中央寄せを維持
+                        document.body.style.overflow = 'hidden'; // 背景のスクロールを禁止
+                    });
+                });
+            }
+
+            closeButton.addEventListener('click', () => {
+                modal.style.display = 'none';
+                document.body.style.overflow = ''; // 背景のスクロールを許可
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target == modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // 初期表示
+            renderMenuItems();
+        });
+    </script>
+</body>
+</html>
