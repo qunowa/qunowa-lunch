@@ -54,49 +54,56 @@
                     name: "特製ハンバーグランチ",
                     price: "¥1,200",
                     description: "厳選した国産豚と牛肉を黄金比でブレンドした、肉汁あふれるジューシーなハンバーグです。特製デミグラスソースが、ご飯との相性抜群。彩り豊かな新鮮野菜と共にお召し上がりください。",
-                    image: "images/image-01.webp"
+                    image: "images/image-01.webp",
+                    fallbackImage: "https://via.placeholder.com/400x400/CCCCCC/999999?text=Fallback+Image+01"
                 },
                 {
                     id: 2,
                     name: "彩り野菜のパスタ",
                     price: "¥1,100",
                     description: "旬の野菜をふんだんに使用した、彩り豊かなパスタです。特製のソースが野菜の甘みを引き立て、ヘルシーながらも満足感のある一皿に仕上げました。",
-                    image: "images/image-02.webp"
+                    image: "images/image-02.webp",
+                    fallbackImage: "https://via.placeholder.com/400x400/CCCCCC/999999?text=Fallback+Image+02"
                 },
                 {
                     id: 3,
                     name: "チキン南蛮定食",
                     price: "¥1,050",
                     description: "特製の甘酢とタルタルソースが絶妙に絡み合う、ジューシーなチキン南蛮です。ご飯が進むこと間違いなしの、ボリューム満点定食。",
-                    image: "images/image-03.webp"
+                    image: "images/image-03.webp",
+                    fallbackImage: "https://via.placeholder.com/400x400/CCCCCC/999999?text=Fallback+Image+03"
                 },
                 {
                     id: 4,
                     name: "海鮮丼",
                     price: "¥1,500",
                     description: "新鮮な海の幸を贅沢に盛り付けた海鮮丼。その日の仕入れによって内容が変わる、旬の味覚をお楽しみください。",
-                    image: "images/image-04.webp"
+                    image: "images/image-04.webp",
+                    fallbackImage: "https://via.placeholder.com/400x400/CCCCCC/999999?text=Fallback+Image+04"
                 },
                 {
                     id: 5,
                     name: "ローストビーフ丼",
                     price: "¥1,350",
                     description: "低温でじっくりと火を通した柔らかなローストビーフを、特製ソースと共にご飯の上に。贅沢な味わいをご堪能ください。",
-                    image: "images/image-05.webp"
+                    image: "images/image-05.webp",
+                    fallbackImage: "https://via.placeholder.com/400x400/CCCCCC/999999?text=Fallback+Image+05"
                 },
                 {
                     id: 6,
                     name: "本日の日替わりランチ",
                     price: "¥980",
                     description: "毎日変わるシェフのおすすめランチ。旬の食材を活かした、ここでしか味わえない一皿です。内容はスタッフまでお尋ねください。",
-                    image: "images/image-06.webp"
+                    image: "images/image-06.webp",
+                    fallbackImage: "https://via.placeholder.com/400x400/CCCCCC/999999?text=Fallback+Image+06"
                 },
                 {
                     id: 7,
                     name: "刺身定食",
                     price: "¥1,400",
                     description: "新鮮な海の幸を贅沢に盛り合わせた、料理長自慢の刺身定食です。旬の魚介を日替わりでご提供。ぷりぷりの食感と、とろける旨味をご堪能ください。",
-                    image: "images/image-07.webp"
+                    image: "images/image-07.webp",
+                    fallbackImage: "https://via.placeholder.com/400x400/CCCCCC/999999?text=Fallback+Image+07"
                 }
             ];
 
@@ -113,9 +120,13 @@
                     gridItem.dataset.price = item.price;
                     gridItem.dataset.description = item.description;
                     gridItem.dataset.image = item.image;
+                    gridItem.dataset.fallbackImage = item.fallbackImage;
 
                     gridItem.innerHTML = `
-                        <img src="${item.image}" alt="${item.name}" loading="lazy">
+                        <picture>
+                            <source srcset="${item.image}" type="image/webp">
+                            <img src="${item.fallbackImage}" alt="${item.name}" loading="lazy">
+                        </picture>
                         <div class="grid-item-text">
                             <h3>${item.name}</h3>
                             <p>${item.price}</p>
